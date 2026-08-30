@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI SMS Spam Detector</title>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <main class="container">
+    <section class="card">
+      <div class="badge">NLP • Machine Learning • FastAPI</div>
+      <h1>AI SMS Spam Detector</h1>
+      <p class="lead">Enter an SMS message and the trained AI model will classify it as <strong>Spam</strong> or <strong>Ham</strong> (legitimate).</p>
+
+      {% if not model_ready %}
+      <div class="warning">Model not found. Run <code>python scripts/train_model.py</code> before making predictions.</div>
+      {% endif %}
+
+      <label for="message">SMS message</label>
+      <textarea id="message" rows="7" placeholder="Example: Congratulations! You have won a free prize. Call now to claim..."></textarea>
+      <button id="predictBtn">Classify Message</button>
+
+      <section id="result" class="result hidden" aria-live="polite">
+        <div id="resultLabel" class="result-label"></div>
+        <div class="probabilities">
+          <p>Spam probability: <span id="spamProbability">-</span></p>
+          <p>Ham probability: <span id="hamProbability">-</span></p>
+          <p>Confidence: <span id="confidence">-</span></p>
+        </div>
+      </section>
+      <p id="error" class="error hidden"></p>
+      <p class="footer-note">For demonstration and educational use. Predictions are probabilistic and should not be treated as a security guarantee.</p>
+    </section>
+  </main>
+
+<script>
+const btn = document.getElementById('predictBtn');
+const result = document.getElementById('result');
+const error = document.getElementById('error');
+
+function pct(x) { return (Number(x) * 100).toFixed(2) + '%'; }
+
+btn.addEventListener('click', async () => {
+  const message = document.getElementById('message').value.trim();
+  result.classList.add('hidden');
+  error.classList.add('hidden');
+
+  if (!message) {
+    error.textContent = 'Please enter a message.';
+    error.classList.remove('hidden');
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = 'Classifying...';
+  try {
+    const response = await fetch('/api/predict', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({message})
+    });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.detail || 'Prediction failed.');
+
+    const label = data.label.toUpperCase();
+    const labelEl = document.getElementById('resultLabel');
+    labelEl.textContent = label === 'SPAM' ? '⚠ Spam detected' : '✓ Legitimate message (Ham)';
+    labelEl.className = 'result-label ' + (label === 'SPAM' ? 'spam' : 'ham');
+    document.getElementById('spamProbability').textContent = pct(data.spam_probability);
+    document.getElementById('hamProbability').textContent = pct(data.ham_probability);
+    document.getElementById('confidence').textContent = pct(data.confidence);
+    result.classList.remove('hidden');
+  } catch (e) {
+    error.textContent = e.message;
+    error.classList.remove('hidden');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Classify Message';
+  }
+});
+</script>
+</body>
+</html>

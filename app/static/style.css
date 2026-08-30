@@ -1,0 +1,30 @@
+:root {
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: #f5f7fb;
+  color: #172033;
+}
+* { box-sizing: border-box; }
+body { margin: 0; min-height: 100vh; }
+.container { min-height: 100vh; display: grid; place-items: center; padding: 32px 16px; }
+.card { width: min(760px, 100%); background: white; border-radius: 22px; padding: 36px; box-shadow: 0 18px 55px rgba(26, 39, 72, 0.12); }
+.badge { display: inline-block; font-size: .78rem; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; background: #eef3ff; color: #314e9f; padding: 7px 10px; border-radius: 999px; }
+h1 { margin: 18px 0 8px; font-size: clamp(2rem, 5vw, 3rem); }
+.lead { color: #5d6679; line-height: 1.65; margin-bottom: 24px; }
+label { display: block; font-weight: 700; margin-bottom: 8px; }
+textarea { width: 100%; resize: vertical; border: 1px solid #d8deea; border-radius: 14px; padding: 14px; font: inherit; outline: none; }
+textarea:focus { border-color: #4e6fe8; box-shadow: 0 0 0 3px rgba(78,111,232,.12); }
+button { width: 100%; margin-top: 14px; border: 0; border-radius: 13px; padding: 14px 18px; font: inherit; font-weight: 700; background: #2747c7; color: white; cursor: pointer; }
+button:disabled { opacity: .65; cursor: wait; }
+.result { margin-top: 22px; border: 1px solid #e1e6ef; border-radius: 14px; padding: 18px; background: #fafbfe; }
+.result-label { font-size: 1.25rem; font-weight: 800; }
+.spam { color: #b42318; }
+.ham { color: #18794e; }
+.probabilities { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; color: #525d72; }
+.probabilities p { margin-bottom: 0; }
+.warning, .error { margin: 14px 0; padding: 12px 14px; border-radius: 10px; }
+.warning { background: #fff7e6; color: #7a4b00; }
+.error { background: #fff0f0; color: #9f1b1b; }
+.footer-note { margin-top: 24px; color: #7a8496; font-size: .85rem; line-height: 1.5; }
+.hidden { display: none; }
+code { background: rgba(0,0,0,.05); padding: 2px 5px; border-radius: 5px; }
+@media (max-width: 620px) { .card { padding: 24px; } .probabilities { grid-template-columns: 1fr; gap: 0; } }
